@@ -111,7 +111,9 @@ Useful early browser audio tools may include:
 - `GainNode`
 - `AudioWorkletNode`
 
-The current audio enhancement path uses tab capture plus an offscreen Web Audio graph. It applies a high-pass filter, low-shelf reduction, presence/clarity boosts, light high-shelf reduction, compression, and output gain.
+The current audio enhancement path uses tab capture plus an offscreen Web Audio graph. It captures audio as one-second PCM chunks in `audio-worklet.js`, processes each chunk in an `OfflineAudioContext`, then schedules the processed chunks for playback with a deeper buffer to reduce underruns.
+
+The current chunk processor applies a high-pass filter, low-shelf reduction, presence/clarity boosts, light high-shelf reduction, compression, and output gain.
 
 This improves speech focus, but it is not true AI source separation.
 

@@ -92,6 +92,8 @@ toggle.addEventListener("change", async () => {
 
   try {
     const tab = await getActiveTab();
+    setStatus(isEnabled ? "Preparing enhanced audio..." : "Restoring original audio...");
+
     const response = await setAudioEnhancement(tab, isEnabled);
 
     if (!response?.ok) {
