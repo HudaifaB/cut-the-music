@@ -91,19 +91,6 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
 });
 
 chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
-  if (message?.type === "YOUTUBE_PLAYBACK_STATE") {
-    if (activeCaptureTabId) {
-      sendMessageToOffscreen({
-        type: "SYNC_PLAYBACK_STATE",
-        paused: message.paused,
-        currentTime: message.currentTime,
-        playbackRate: message.playbackRate
-      });
-    }
-
-    return false;
-  }
-
   if (message?.type !== "SET_AUDIO_ENHANCEMENT") {
     return false;
   }
