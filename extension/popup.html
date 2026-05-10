@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Cut The Music</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --youtube-red: #ff0033;
+        --youtube-red-dark: #cc0029;
+        --text: #0f0f0f;
+        --muted: #606060;
+        --surface: #ffffff;
+        --surface-soft: #f7f7f7;
+        --border: #e5e5e5;
+        --off: #d9d9d9;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        width: 300px;
+        margin: 0;
+        background: var(--surface);
+        color: var(--text);
+        font-family: Arial, Helvetica, sans-serif;
+      }
+
+      .popup {
+        padding: 18px;
+      }
+
+      .header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding-bottom: 16px;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .mark {
+        display: grid;
+        place-items: center;
+        width: 34px;
+        height: 24px;
+        border-radius: 7px;
+        background: var(--youtube-red);
+        color: #ffffff;
+        font-size: 13px;
+        font-weight: 700;
+        line-height: 1;
+      }
+
+      .title {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 700;
+        letter-spacing: 0;
+      }
+
+      .subtitle {
+        margin: 2px 0 0;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.35;
+      }
+
+      .control {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+        padding: 18px 0 14px;
+      }
+
+      .label {
+        display: block;
+        font-size: 14px;
+        font-weight: 700;
+      }
+
+      .state {
+        display: block;
+        margin-top: 4px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .switch {
+        position: relative;
+        display: inline-flex;
+        width: 58px;
+        height: 32px;
+        flex: 0 0 auto;
+      }
+
+      .switch input {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        opacity: 0;
+      }
+
+      .slider {
+        position: absolute;
+        inset: 0;
+        border: 1px solid #cfcfcf;
+        border-radius: 999px;
+        background: var(--off);
+        cursor: pointer;
+        transition: background 160ms ease, border-color 160ms ease;
+      }
+
+      .slider::before {
+        content: "";
+        position: absolute;
+        top: 3px;
+        left: 3px;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: #ffffff;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.26);
+        transition: transform 160ms ease;
+      }
+
+      .switch input:checked + .slider {
+        border-color: var(--youtube-red-dark);
+        background: var(--youtube-red);
+      }
+
+      .switch input:checked + .slider::before {
+        transform: translateX(26px);
+      }
+
+      .switch input:focus-visible + .slider {
+        outline: 3px solid rgba(255, 0, 51, 0.24);
+        outline-offset: 3px;
+      }
+
+      .status {
+        min-height: 38px;
+        padding: 10px 12px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background: var(--surface-soft);
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.35;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="popup">
+      <header class="header">
+        <div class="mark" aria-hidden="true">CTM</div>
+        <div>
+          <h1 class="title">Cut The Music</h1>
+          <p class="subtitle">Voice-focused listening for YouTube.</p>
+        </div>
+      </header>
+
+      <section class="control" aria-label="Music filter control">
+        <div>
+          <span class="label">Music filter</span>
+          <span class="state" id="stateText">Off</span>
+        </div>
+
+        <label class="switch" for="musicToggle">
+          <input id="musicToggle" type="checkbox" role="switch" aria-label="Toggle music filter">
+          <span class="slider" aria-hidden="true"></span>
+        </label>
+      </section>
+
+      <p class="status" id="statusText">Checking current tab...</p>
+    </main>
+
+    <script src="popup.js"></script>
+  </body>
+</html>
