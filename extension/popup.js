@@ -22,6 +22,10 @@ function setStatus(message) {
   statusText.textContent = message;
 }
 
+function setBusy(isBusy) {
+  toggle.disabled = isBusy;
+}
+
 async function getActiveTab() {
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
   return tab;
@@ -40,6 +44,29 @@ async function notifyActiveTab(tab, isEnabled) {
   } catch {
     setStatus("Toggle saved. Refresh the YouTube tab if the page script is not ready yet.");
   }
+}
+
+async function setAudioEnhancement(tab, isEnabled) {
+  if (!isEnabled) {
+    return chrome.runtime.sendMessage({
+      type: "SET_AUDIO_ENHANCEMENT",
+      tabId: tab?.id,
+      enabled: false
+    });
+  }
+
+  if (!tab?.id || !isYouTubeUrl(tab.url)) {
+    return {
+      ok: false,
+      error: "Open a YouTube video to use the filter."
+    };
+  }
+
+  return chrome.runtime.sendMessage({
+    type: "SET_AUDIO_ENHANCEMENT",
+    tabId: tab.id,
+    enabled: isEnabled
+  });
 }
 
 async function initializePopup() {
@@ -61,16 +88,24 @@ async function initializePopup() {
 toggle.addEventListener("change", async () => {
   const isEnabled = toggle.checked;
   setToggleState(isEnabled);
+  setBusy(true);
 
-  await chrome.storage.sync.set({ musicFilterEnabled: isEnabled });
+  try {
+    const tab = await getActiveTab();
+    const response = await setAudioEnhancement(tab, isEnabled);
 
-  const tab = await getActiveTab();
-  await notifyActiveTab(tab, isEnabled);
+    if (!response?.ok) {
+      throw new Error(response?.error || "Unable to update the audio filter.");
+    }
 
-  if (isYouTubeUrl(tab?.url)) {
-    setStatus(isEnabled ? "Filter is on for YouTube." : "Filter is off for YouTube.");
-  } else {
-    setStatus("Setting saved. Open YouTube to use it.");
+    await notifyActiveTab(tab, isEnabled);
+
+    setStatus(isEnabled ? "Enhanced audio is playing." : "Original audio restored.");
+  } catch (error) {
+    setToggleState(false);
+    setStatus(error.message);
+  } finally {
+    setBusy(false);
   }
 });
 

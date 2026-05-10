@@ -72,11 +72,11 @@ Avoid putting heavy audio processing here.
 
 ### `extension/offscreen.html`
 
-The offscreen document page. Manifest V3 service workers are not designed for long-running DOM or audio work, so audio processing can later be hosted through an offscreen document.
+The offscreen document page. Manifest V3 service workers are not designed for long-running DOM or audio work, so audio processing is hosted through an offscreen document.
 
 ### `extension/offscreen.js`
 
-The script for the offscreen document. Use it to receive captured audio streams and set up the Web Audio graph.
+The script for the offscreen document. It receives captured audio stream IDs and sets up the Web Audio graph for voice-focused enhancement.
 
 ### `extension/audio-worklet.js`
 
@@ -91,6 +91,7 @@ Do not add large model binaries to the repository without first deciding how the
 ## Chrome Extension Notes
 
 - This project uses Manifest V3.
+- The project requires Chrome 116 or newer because tab capture stream IDs from a service worker are consumed by an offscreen document.
 - Keep permissions as narrow as possible.
 - The extension currently targets `https://www.youtube.com/*`.
 - Use `chrome.storage.sync` for small user settings.
@@ -110,7 +111,9 @@ Useful early browser audio tools may include:
 - `GainNode`
 - `AudioWorkletNode`
 
-For the first working versions, prefer simple Web Audio processing before adding machine learning.
+The current audio enhancement path uses tab capture plus an offscreen Web Audio graph. It applies a high-pass filter, low-shelf reduction, presence/clarity boosts, light high-shelf reduction, compression, and output gain.
+
+This improves speech focus, but it is not true AI source separation.
 
 ## Development Guidelines
 

@@ -3,6 +3,7 @@
   "name": "Cut The Music",
   "description": "A YouTube-focused extension for reducing background music.",
   "version": "0.1.0",
+  "minimum_chrome_version": "116",
   "action": {
     "default_title": "Cut The Music",
     "default_popup": "popup.html"
