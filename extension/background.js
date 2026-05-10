@@ -1,4 +1,5 @@
 const OFFSCREEN_DOCUMENT_PATH = "offscreen.html";
+const AUDIO_PROCESSING_MODE = "experimental-ai";
 
 let activeCaptureTabId = null;
 
@@ -53,7 +54,8 @@ async function startAudioEnhancement(tabId) {
 
   const response = await sendMessageToOffscreen({
     type: "START_AUDIO_ENHANCEMENT",
-    streamId
+    streamId,
+    mode: AUDIO_PROCESSING_MODE
   });
 
   if (!response?.ok) {
@@ -63,7 +65,7 @@ async function startAudioEnhancement(tabId) {
   activeCaptureTabId = tabId;
   await chrome.storage.sync.set({ musicFilterEnabled: true });
 
-  return { ok: true };
+  return response;
 }
 
 async function stopAudioEnhancement() {

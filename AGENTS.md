@@ -111,11 +111,13 @@ Useful early browser audio tools may include:
 - `GainNode`
 - `AudioWorkletNode`
 
-The current audio enhancement path uses tab capture plus an offscreen Web Audio graph. It processes audio live to keep the enhanced audio synced with the YouTube video.
+The current audio enhancement path uses tab capture plus an offscreen Web Audio graph. It can process audio live to keep the enhanced audio synced with the YouTube video.
 
 The current live processor applies a high-pass filter, low-shelf reduction, presence/clarity boosts, light high-shelf reduction, compression, and output gain.
 
-An experimental chunked-processing path was explored, but it introduced audible delay, pause tails, and video/audio sync drift. Do not use chunked scheduling for the active listening path unless the video playback is deliberately delayed to match the processed audio.
+There is also an experimental AI chunk path. It captures one-second PCM chunks in `audio-worklet.js`, calls `ai-processor.js`, then runs the same DSP cleanup before scheduling the chunk for playback. If ONNX Runtime Web or `models/voice-separator.onnx` is missing, the extension falls back to live DSP mode.
+
+Chunked scheduling can introduce audible delay, pause tails, and video/audio sync drift. Do not use it for the default listening path unless the video playback is deliberately delayed to match the processed audio.
 
 This improves speech focus, but it is not true AI source separation.
 

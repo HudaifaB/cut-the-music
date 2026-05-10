@@ -102,7 +102,11 @@ toggle.addEventListener("change", async () => {
 
     await notifyActiveTab(tab, isEnabled);
 
-    setStatus(isEnabled ? "Enhanced audio is playing." : "Original audio restored.");
+    if (isEnabled && response.fallbackReason) {
+      setStatus(`Live filter is playing. ${response.fallbackReason}`);
+    } else {
+      setStatus(isEnabled ? "Enhanced audio is playing." : "Original audio restored.");
+    }
   } catch (error) {
     setToggleState(false);
     setStatus(error.message);

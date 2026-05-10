@@ -33,7 +33,10 @@
   "web_accessible_resources": [
     {
       "resources": [
-        "audio-worklet.js"
+        "audio-worklet.js",
+        "ai-processor.js",
+        "lib/*",
+        "models/*"
       ],
       "matches": [
         "https://www.youtube.com/*"
